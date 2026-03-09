@@ -1,0 +1,98 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    color: #fff;
+    font-family: sans-serif;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .sparkle-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  
+  #days {
+    font-size: 5rem;
+    margin: 20px 0;
+  }
+  
+  .sparkle {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle, pink 0%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+    box-shadow: 0 0 10px white;
+    animation: sparkle-animation 1.5s ease-out forwards;
+  }
+  
+  @keyframes sparkle-animation {
+    0% {
+      transform: scale(0) rotate(0deg);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(2) rotate(180deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0) rotate(360deg);
+      opacity: 0;
+    }
+  }
+  /* 回転しながら消えていく */
+  .shine-container {
+    position: relative;
+    width: 404px;
+    height: 318px;
+    margin: 0 auto;
+    animation: hideContainer 8s forwards; /* 8秒後に非表示 */
+  }
+  
+  .shine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    animation: rotate-shine 3s linear infinite, blink 3s infinite ease-in-out;
+    opacity: 0;
+  }
+  
+  @keyframes rotate-shine {
+    from {
+      transform: rotate(0deg) scale(1);
+    }
+    to {
+      transform: rotate(360deg) scale(1.2);
+    }
+  }
+  
+  
+  .sparkle1 { animation-delay: 0s; }
+  .sparkle2 { animation-delay: 1s; }
+  .sparkle3 { animation-delay: 2s; }
+  
+  @keyframes blink {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+  }
+  
+  @keyframes hideContainer {
+    0%   { opacity: 1; visibility: visible; }
+    100% { opacity: 0; visibility: hidden; }
+  }
+  
