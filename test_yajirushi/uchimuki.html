@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      background-color: white; /* ページ背景 */
+    }
+
+    .header {
+      position: relative;
+      background-color: #0d3b75;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-weight: bold;
+    }
+
+    .header::before {
+      content: "";
+      position: absolute;
+      bottom: 0; /* ヘッダーの内側に配置 */
+      left: 50%;
+      transform: translateX(-50%) translateY(50%); /* 下に半分めり込ませる */
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid white; /* 三角の色（背景色と一致） */
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    “失敗しない”副業・フリーランスを望むなら…
+  </div>
+
+</body>
+</html>
+
+

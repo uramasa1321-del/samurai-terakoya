@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      .head {
+        position: relative;
+        /* 三角形を絶対位置で配置するために必要 */
+        height: 10.5%;
+        background-color: #133770;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+      }
+
+      /* くぼみ（三角形） */
+      .head::after {
+        content: "";
+        position: absolute;
+        bottom: -1px; /* ぴったりに重ねる */
+        left: 50%;
+        transform: translateX(-50%) rotate(180deg); /* ← ここで回転！ */
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid #fff; /* 下地の色に合わせて */
+        z-index: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="head">“失敗しない”副業・フリーランスを望むなら…</div>
+  </body>
+</html>
