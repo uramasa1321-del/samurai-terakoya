@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>参考サイトリンク集</title>
+<style>
+:root{--bg:#0f1724;--card:#0b1220;--accent:#06b6d4;--muted:#94a3b8}
+*{box-sizing:border-box}
+body{font-family:Inter, system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;margin:0;background:linear-gradient(180deg,#071022,#07142a);color:#e6eef6;min-height:100vh;padding:24px}
+header{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+h1{margin:0;font-size:18px}
+.controls{margin-left:auto;display:flex;gap:8px;align-items:center}
+.search{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;min-width:220px}
+.btn{background: rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);padding:8px 10px;border-radius:8px;cursor:pointer;color:#ffffff;font-size:13px;transition:0.2s;}
+.btn:hover{background: rgba(255,255,255,0.15);}
+.tags{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap}
+.tag{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.03);color:var(--muted);font-size:13px;cursor:pointer}
+.tag.active{background:var(--accent);color:#012;}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:12px;display:flex;gap:12px;align-items:flex-start}
+.favicon{width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-weight:700}
+.meta{flex:1}
+.title{font-size:15px;margin:0 0 6px 0}
+.desc{margin:0;font-size:13px;color:var(--muted);line-height:1.3}
+.meta-foot{margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.open{} 
+.small{font-size:12px;color:var(--muted)}
+
+/* footer form */
+.add-form{margin-top:18px;background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;display:flex;gap:8px;flex-wrap:wrap}
+.add-form input{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+.export{font-size:13px;color:var(--muted)}
+
+/* responsive */
+@media (max-width:640px){header{gap:8px} .controls{margin-left:0;width:100%;justify-content:space-between}}
+</style>
+</head>
+<body>
+<header>
+<div>
+<h1>参考サイトリンク集</h1>
+<div class="small">ワンクリックで開く・タグで絞り込み・検索可</div>
+</div>
+<div class="controls">
+<input id="search" class="search" placeholder="サイト名・説明で検索 (例: Tailwind, 参考)" />
+<button id="clearBtn" type="button" class="btn" title="選択と検索をクリア">クリア</button>
+<button id="exportBtn" type="button" class="btn" title="JSONとしてエクスポート">エクスポート</button>
+</div>
+</header>
+
+<div class="tags" id="tags"></div>
+
+<main>
+<div class="grid" id="grid"></div>
+
+<form id="addForm" class="add-form" onsubmit="return false">
+<input id="name" placeholder="サイト名 (必須)" required />
+<input id="url" placeholder="https://example.com (必須)" required />
+<input id="desc" placeholder="簡単な説明 (任意)" />
+<input id="category" placeholder="カテゴリ/タグ（カンマ区切り）" />
+<button id="addBtn" type="button" class="btn">追加</button>
+<div class="export" id="hint">※編集はブラウザローカルに保存されます。エクスポートを忘れずに。</div>
+</form>
+</main>
+
+<script>
+const SAMPLE = [
+{name:'MDN Web Docs', url:'https://developer.mozilla.org/ja/', desc:'ブラウザAPIやHTML/CSS/JSの仕様と例', tags:['docs','web']},
+{name:'Can I use', url:'https://caniuse.com/', desc:'ブラウザ互換性一覧', tags:['compat']},
+{name:'Tailwind CSS', url:'https://tailwindcss.com/', desc:'ユーティリティファーストなCSSフレームワーク', tags:['css','framework','ui']},
+];
+
+let links = JSON.parse(localStorage.getItem('links_v1')||'null') || SAMPLE;
+let activeTag = null;
+const grid = document.getElementById('grid');
+const tagsEl = document.getElementById('tags');
+const searchInput = document.getElementById('search');
+
+function save(){ localStorage.setItem('links_v1', JSON.stringify(links)); }
+
+function getAllTags(){ const s = new Set(); links.forEach(l=> (l.tags||[]).forEach(t=>s.add(t.trim()))); return [...s].filter(Boolean).sort(); }
+
+function renderTags(){ 
+  const tags = getAllTags(); 
+  tagsEl.innerHTML='';
+  const all = document.createElement('div'); 
+  all.className='tag'+(activeTag? '':' active'); 
+  all.textContent='All'; 
+  all.onclick=()=>{activeTag=null;render();}; 
+  tagsEl.appendChild(all);
+  tags.forEach(t=>{
+    const d=document.createElement('div'); 
+    d.className='tag'+(t===activeTag? ' active':''); 
+    d.textContent=t; 
+    d.onclick=()=>{ activeTag = (activeTag===t? null: t); render(); }; 
+    tagsEl.appendChild(d); 
+  }); 
+}
+
+function createFavicon(url){ 
+  try{const u=new URL(url); return 'https://www.google.com/s2/favicons?sz=64&domain='+u.hostname; }
+  catch(e){ return ''; } 
+}
+
+function render(){
+  renderTags();
+  const q = searchInput.value.trim().toLowerCase();
+  grid.innerHTML='';
+  const filtered = links.filter(l=>{
+    if(activeTag && !(l.tags||[]).map(x=>x.toLowerCase()).includes(activeTag.toLowerCase())) return false;
+    if(!q) return true;
+    return (l.name||'').toLowerCase().includes(q) || (l.desc||'').toLowerCase().includes(q) || (l.url||'').toLowerCase().includes(q);
+  });
+
+  filtered.forEach(l=>{
+    const c=document.createElement('article'); 
+    c.className='card';
+    
+    // favicon or letter
+    let imgEl;
+    const fav=createFavicon(l.url);
+    if(fav){
+      imgEl = document.createElement('img');
+      imgEl.className='favicon';
+      imgEl.src=fav;
+      imgEl.alt='favicon';
+      imgEl.style.width='44px';
+      imgEl.style.height='44px';
+    } else {
+      imgEl = document.createElement('div');
+      imgEl.className='favicon';
+      imgEl.textContent = (l.name||'?').slice(0,1);
+    }
+    
+    const m=document.createElement('div'); m.className='meta';
+    const title=document.createElement('h3'); title.className='title'; 
+    const a=document.createElement('a'); a.href=l.url; a.target='_blank'; a.rel='noopener noreferrer'; a.textContent=l.name; a.style.color='inherit'; a.style.textDecoration='none'; 
+    title.appendChild(a);
+
+    const desc=document.createElement('p'); desc.className='desc'; desc.textContent=l.desc || '';
+
+    const foot=document.createElement('div'); foot.className='meta-foot';
+    const tagspan=document.createElement('div'); tagspan.className='small'; tagspan.textContent = (l.tags||[]).join(' · ');
+
+    const open=document.createElement('a'); open.className='btn open'; open.textContent='開く'; open.href=l.url; open.target='_blank'; open.rel='noopener noreferrer';
+    const edit=document.createElement('button'); edit.className='btn'; edit.type='button'; edit.textContent='編集'; edit.onclick=()=>editLink(l);
+    const del=document.createElement('button'); del.className='btn'; del.type='button'; del.textContent='削除'; del.onclick=()=>{ if(confirm('削除してよいですか？')){ links = links.filter(x=>x!==l); save(); render(); } };
+
+    foot.appendChild(tagspan); foot.appendChild(edit); foot.appendChild(del); foot.appendChild(open);
+
+    m.appendChild(title); m.appendChild(desc); m.appendChild(foot);
+    c.appendChild(imgEl); c.appendChild(m);
+    grid.appendChild(c);
+  });
+}
+
+const addForm = document.getElementById('addForm');
+document.getElementById('addBtn').addEventListener('click',()=>{
+  const name = document.getElementById('name').value.trim();
+  const url  = document.getElementById('url').value.trim();
+  const desc = document.getElementById('desc').value.trim();
+  const category = document.getElementById('category').value.trim();
+  if(!name || !url) return alert('サイト名とURLは必須です');
+  const entry = {name, url, desc, tags: category? category.split(',').map(s=>s.trim()).filter(Boolean): [] };
+  links.unshift(entry);
+  save();
+  addForm.reset();
+  render();
+});
+
+function editLink(link){ 
+  const name = prompt('サイト名', link.name); if(!name) return; 
+  const url = prompt('URL', link.url); if(!url) return; 
+  const desc = prompt('説明', link.desc||''); 
+  const tags = prompt('タグ（カンマ区切り）', (link.tags||[]).join(',')); 
+  link.name=name; link.url=url; link.desc=desc; 
+  link.tags = tags? tags.split(',').map(s=>s.trim()).filter(Boolean):[]; 
+  save(); render(); 
+}
+
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  const blob = new Blob([JSON.stringify(links, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob); 
+  const a=document.createElement('a'); a.href=url; a.download='links.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+});
+document.getElementById('clearBtn').addEventListener('click',()=>{ searchInput.value=''; activeTag=null; render(); });
+searchInput.addEventListener('input', ()=> render());
+document.addEventListener('keydown', (e)=>{ if((e.ctrlKey||e.metaKey) && e.key==='f'){ e.preventDefault(); searchInput.focus(); } });
+
+render();
+</script>
+</body>
+</html>
+
+
