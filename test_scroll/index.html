@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+.scroll-indicator {
+  text-align: center;
+  margin-top: 50px;
+  animation: bounce 2s infinite;
+  cursor: pointer;
+  color: #003399;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
+.scroll-indicator .chevron {
+  width: 20px;
+  height: 20px;
+  border-bottom: 2px solid #003399;
+  border-right: 2px solid #003399;
+  transform: rotate(45deg);
+  margin: 0 auto;
+  margin-bottom: -10px;
+  opacity: 0;
+  animation: fadeInOut 1.5s infinite;
+}
+
+.scroll-indicator .chevron:nth-child(1) {
+  animation-delay: 0s;
+}
+.scroll-indicator .chevron:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.scroll-indicator .chevron:nth-child(3) {
+  animation-delay: 0.4s;
+  margin-bottom: 20px;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(0) rotate(45deg); }
+  50% { opacity: 1; transform: translateY(5px) rotate(45deg); }
+  100% { opacity: 0; transform: translateY(10px) rotate(45deg); }
+}
+    </style>
+</head>
+<body>
+<div class="scroll-indicator">
+  <div class="chevron"></div>
+  <div class="chevron"></div>
+  <div class="chevron"></div>
+  <p>Scroll</p>
+</div>
+</body>
+</html>
