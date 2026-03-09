@@ -1,0 +1,9 @@
+@charset "utf-8";
+
+p.google-fonts{
+  /* ここにGoogleFontsを指定します */
+  font-family: "Noto Sans JP", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}

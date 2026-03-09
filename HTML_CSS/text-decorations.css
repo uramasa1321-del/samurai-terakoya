@@ -1,0 +1,65 @@
+@charset "utf-8";
+p.decoration{
+  /* フォントサイズの変更px,rem,em使用可能 */
+  /* font-size: 48px; */
+
+  /* 色の変更の仕方 */
+  /* color: red; */
+  /* color: #f00; */
+  /* color: rgb(255,0,0); */
+
+  /* フォントの太さを変更 */
+  /* font-weight: bold; */
+
+/* フォントを斜体にする※斜体にできるフォントのみ */
+  /* font-family: "游ゴシック体", "YuGothic", "游ゴシック", "Yu Gothic";
+  font-style: italic; */
+
+  /* 行間を変える */
+  /* line-height: 4.5; */
+
+  /* 字間を変える */
+  /* letter-spacing: 1.5em; */
+
+  /* 下線を引く */
+  /* text-decoration: underline; */
+
+  /* 取り消し線を追加する */
+  /* text-decoration: line-through; */
+
+     /* borderプロパティの値にsolidを指定すると、実線になります */
+  /* border: solid 3px red; */
+
+  /* borderプロパティの値にdottedを指定すると、点線になります */
+  /* border: dotted 3px blue; */
+
+     /* borderプロパティの値にdashedを指定すると、破線になります */
+  /* border: dashed 3px pink; */
+
+     /* borderプロパティの値にdoubleを指定すると、二重線になります */
+     /* border: double 3px green; */
+
+     /* 下記2つ同時に使用できる */
+     /* border-top: solid 3px red;
+     border-bottom: dotted 3px blue; */
+
+     /* 下記２つ同時に使用できる */
+     /* border-left: dashed 3px green;
+     border-right: double 3px gray; */
+
+     /* 背景色を付ける↓ */
+  /* background-color: red; */
+
+  /* 文字に影をつける */
+  /* text-shadow: 1px 1px 2px gray; */
+
+  /* 文字の位置を変える */
+  text-align: center;
+
+
+}
+  /* spanを使用して文字の一部だけ装飾する */
+
+span.text-bold{
+    font-weight: bold;
+}

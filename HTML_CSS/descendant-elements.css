@@ -1,0 +1,9 @@
+@charset "utf-8";
+/* 子孫要素にCSSを適用する方法↓ */
+/* #parent p {
+  color: red;
+} */
+/* 直下の子要素にだけCSSを適用する方法↓ */
+#parent > p {
+  color: red;
+}

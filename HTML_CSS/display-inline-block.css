@@ -1,0 +1,33 @@
+@charset "utf-8";
+#first-div {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    background-color: lightblue;
+    padding: 10px;
+    margin: 10px;
+  }
+  #second-div {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    background-color: lightgreen;
+    padding: 20px;
+    margin: 20px;
+  }
+  #third-div {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    background-color: lightgray;
+    padding: 30px;
+    margin: 30px;
+  }
+  #fourth-div {
+    /* インラインブロックなし */
+    width: 100px;
+    height: 100px;
+    background-color: yellow;
+    padding: 40px;
+    margin: 40px;
+  }

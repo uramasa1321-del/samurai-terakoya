@@ -1,0 +1,7 @@
+@charset "utf-8";
+
+p,
+ #first-heading,
+ .text-red {
+  color: red;
+}
