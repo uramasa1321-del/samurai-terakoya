@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CTA タイマー付きランディング</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #111;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .meter {
+        width: 80%;
+        max-width: 600px;
+        height: 24px;
+        border-radius: 12px;
+        background: #333;
+        overflow: hidden;
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+        position: relative;
+      }
+      .fill {
+        height: 100%;
+        width: 0%;
+        border-radius: 12px;
+        /* 緑 → 黄 → 赤 に変化するグラデーション */
+        background: linear-gradient(
+          90deg,
+          #22c55e 0%,
+          /* 緑 */ #facc15 50%,
+          /* 黄 */ #ef4444 100% /* 赤 */
+        );
+        transition: width 0.1s linear;
+      }
+      .label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: bold;
+        text-shadow: 0 0 6px black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="meter">
+      <div class="fill" id="fill"></div>
+      <div class="label" id="label">10s</div>
+    </div>
+
+    <script>
+      const fill = document.getElementById("fill");
+      const label = document.getElementById("label");
+
+      const duration = 10; // 秒
+      let start = null;
+
+      function animate(timestamp) {
+        if (!start) start = timestamp;
+        const elapsed = (timestamp - start) / 1000;
+        const percent = Math.min(1, elapsed / duration);
+
+        fill.style.width = percent * 100 + "%";
+        label.textContent = Math.ceil(duration - elapsed) + "s";
+
+        if (percent < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          label.textContent = "TIME UP!";
+          // ページ閉じ処理の代替 → ここで遷移やオーバーレイなど
+          document.body.style.background = "black";
+        }
+      }
+      requestAnimationFrame(animate);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>危機感メーター</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+    .meter {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: 30px;
+      background: #ddd;
+      border-radius: 15px;
+      margin: 20px auto;
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      width: 0;
+      border-radius: 15px;
+      background: green;
+      transition: background-color 0.3s linear;
+    }
+    .fill.blink {
+      animation: blink 0.5s infinite alternate;
+    }
+    @keyframes blink {
+      0% { opacity: 1; }
+      100% { opacity: 0.2; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>⚠️ 早くCTAを押さないとページが閉じてしまいます！</h1>
+  <div class="meter">
+    <div class="fill" id="fill"></div>
+  </div>
+  <p id="countdown"></p>
+
+  <script>
+    const fill = document.getElementById("fill");
+    const countdown = document.getElementById("countdown");
+
+    const totalTime = 15; // 総秒数
+    let timeLeft = totalTime;
+
+    function updateMeter() {
+      timeLeft--;
+
+      // 進捗率（0〜1）
+      const progress = (totalTime - timeLeft) / totalTime;
+      fill.style.width = (progress * 100) + "%";
+
+      // 色の変化 (緑→黄→赤)
+      if (progress < 0.5) {
+        // 緑〜黄色
+        let g = 255;
+        let r = Math.floor(progress * 2 * 255);
+        fill.style.backgroundColor = `rgb(${r},${g},0)`;
+      } else {
+        // 黄色〜赤
+        let r = 255;
+        let g = Math.floor((1 - (progress - 0.5) * 2) * 255);
+        fill.style.backgroundColor = `rgb(${r},${g},0)`;
+      }
+
+      // 残り5秒は点滅
+      if (timeLeft <= 5) {
+        fill.classList.add("blink");
+      }
+
+      countdown.textContent = `残り ${timeLeft} 秒`;
+
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        countdown.textContent = "⏰ ページが閉じます！";
+      }
+    }
+
+    // 初回表示
+    countdown.textContent = `残り ${timeLeft} 秒`;
+
+    const timer = setInterval(updateMeter, 1000);
+  </script>
+
+</body>
+</html>

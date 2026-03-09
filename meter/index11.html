@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ドキドキCTAタイマー</title>
+<style>
+  body {
+    font-family: "Noto Sans JP", sans-serif;
+    background-color: #0f1724;
+    color: #fff;
+    text-align: center;
+    padding: 40px;
+    transition: background-color 0.3s;
+  }
+
+  h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* メーター */
+  .meter {
+    width: 80%;
+    height: 20px;
+    background: #222;
+    margin: 0 auto 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 5px #000 inset;
+  }
+  .meter-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(to right, #22c55e, #facc15, #ef4444);
+    transition: width 1s linear;
+  }
+
+  /* ボタン */
+  .cta-btn {
+    display: inline-block;
+    padding: 14px 30px;
+    font-size: 18px;
+    background-color: #ef4444;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .cta-btn:hover {
+    background-color: #f87171;
+  }
+
+  /* 点滅アニメーション */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+  .blink {
+    animation: blink 0.5s infinite;
+  }
+
+  /* 揺れるアニメーション */
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+  }
+  .shake {
+    animation: shake 0.3s infinite;
+  }
+
+  /* 脈動アニメーション */
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  .pulse {
+    animation: pulse 0.6s infinite;
+  }
+
+  /* 画面全体赤フラッシュ */
+  @keyframes bgFlash {
+    0%, 100% { background-color: #0f1724; }
+    50% { background-color: #300; }
+  }
+  .bg-flash {
+    animation: bgFlash 0.5s infinite;
+  }
+
+  /* 残り秒数を拡大 */
+  .big-count {
+    font-size: 28px !important;
+    transform: scale(1.3);
+    transition: transform 0.3s ease;
+  }
+
+  /* ボタン光る */
+  .glow {
+    box-shadow: 0 0 20px rgba(255,107,107,0.7);
+  }
+</style>
+</head>
+<body>
+  <h1><span id="tick-label">残り時間</span>: <span id="rem-text">15</span> 秒</h1>
+  <div class="meter">
+    <div class="meter-fill" id="meter-fill"></div>
+  </div>
+  <button class="cta-btn" id="cta-btn">今すぐ申し込む！</button>
+
+<script>
+  let duration = 15; // 制限時間
+  let remaining = duration;
+
+  const meterFill = document.getElementById("meter-fill");
+  const tickLabel = document.getElementById("tick-label");
+  const remText = document.getElementById("rem-text");
+  const ctaBtn = document.getElementById("cta-btn");
+
+  function tick() {
+    remaining--;
+    if (remaining < 0) {
+      clearInterval(timer);
+      tickLabel.textContent = "時間切れ";
+      remText.textContent = "";
+      meterFill.style.width = "0%";
+      ctaBtn.disabled = true;
+      ctaBtn.textContent = "終了しました";
+      return;
+    }
+
+    remText.textContent = remaining;
+    meterFill.style.width = (remaining / duration * 100) + "%";
+
+    // 演出切替
+    if (remaining <= 5) {
+      meterFill.classList.add("blink","shake");
+      tickLabel.style.color = "#ff6b6b";
+      remText.style.color = "#ff6b6b";
+      tickLabel.classList.add("big-count");
+      remText.classList.add("big-count");
+      ctaBtn.classList.add("pulse","glow");
+      document.body.classList.add("bg-flash");
+    } else if (remaining <= 10) {
+      meterFill.classList.add("shake");
+      tickLabel.style.color = "#facc15";
+      remText.style.color = "#facc15";
+      tickLabel.classList.remove("big-count");
+      remText.classList.remove("big-count");
+      ctaBtn.classList.remove("glow");
+      document.body.classList.remove("bg-flash");
+      ctaBtn.classList.remove("pulse");
+    } else {
+      meterFill.classList.remove("blink","shake");
+      tickLabel.style.color = "";
+      remText.style.color = "";
+      tickLabel.classList.remove("big-count");
+      remText.classList.remove("big-count");
+      ctaBtn.classList.remove("pulse","glow");
+      document.body.classList.remove("bg-flash");
+    }
+  }
+
+  let timer = setInterval(tick, 1000);
+</script>
+</body>
+</html>

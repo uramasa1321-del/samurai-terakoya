@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CTA タイマー付きランディング</title>
+    <style>
+      :root {
+        --duration-sec: 12; /* 秒数（スクリプト側でも設定可） */
+        --bg: #0f1724;
+        --card: #0b1220;
+        --accent: #ff6b6b;
+        --accent-dark: #c14a4a;
+        --meter-bg: #1f2937;
+        --meter-height: 18px;
+        --radius: 12px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Inter, "Noto Sans JP", system-ui, -apple-system, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(180deg, var(--bg) 0%, #071023 100%);
+        color: #fff;
+        padding: 24px;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 920px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+      }
+
+      .headline {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+      .headline h1 {
+        font-size: 20px;
+        margin: 0;
+        line-height: 1.1;
+      }
+      .badge {
+        background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 13px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+      }
+
+      .meter-wrap {
+        margin-top: 6px;
+      }
+      .meter {
+        background: var(--meter-bg);
+        border-radius: var(--radius);
+        height: var(--meter-height);
+        overflow: hidden;
+        position: relative;
+      }
+      .meter .fill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 0%;
+        border-radius: var(--radius);
+        background: green; /* 初期色（後でJSで変化） */
+        box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.25);
+        transition: width 0.1s linear;
+      }
+      .meter .tick {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 12px;
+        font-weight: 600;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+      }
+
+      .meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .cta {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+        border: 0;
+        color: white;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 15px;
+        box-shadow: 0 8px 30px rgba(193, 74, 74, 0.18);
+      }
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .note {
+        font-size: 13px;
+        opacity: 0.9;
+      }
+
+      /* overlay when timed out */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(
+          0deg,
+          rgba(2, 6, 23, 0.7),
+          rgba(2, 6, 23, 0.5)
+        );
+        z-index: 60;
+        padding: 20px;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.18s ease, visibility 0.18s;
+      }
+      .overlay.show {
+        visibility: visible;
+        opacity: 1;
+      }
+      .overlay .panel {
+        background: #071226;
+        border-radius: 12px;
+        padding: 26px;
+        text-align: center;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      }
+      .overlay h2 {
+        margin: 0 0 10px 0;
+        font-size: 20px;
+      }
+      .overlay p {
+        margin: 0 0 16px 0;
+        opacity: 0.9;
+      }
+
+      /* 点滅アニメーション */
+      @keyframes blink {
+        0%, 50%, 100% { opacity: 1; }
+        25%, 75% { opacity: 0; }
+      }
+      .blink {
+        animation: blink 0.6s infinite;
+      }
+
+      /* small screens */
+      @media (max-width: 560px) {
+        .headline h1 {
+          font-size: 16px;
+        }
+        .btn {
+          padding: 10px 14px;
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card" role="region" aria-labelledby="timed-cta-title">
+      <div class="headline">
+        <div class="badge" id="timed-cta-title">急いで！</div>
+        <h1>
+          このページは早く <strong>CTA</strong> を押さないと閉じられます（仮）
+        </h1>
+      </div>
+
+      <div class="meter-wrap" aria-hidden="false">
+        <div
+          class="meter"
+          id="timerMeter"
+          tabindex="0"
+          title="残り時間を示すメーター（ホバーで一時停止）"
+        >
+          <div class="fill" id="meterFill"></div>
+          <div class="tick" id="tickLabel" aria-hidden="true">--s</div>
+        </div>
+      </div>
+
+      <div class="meta">
+        <div class="note" id="noteLive" aria-live="polite">
+          残り <span id="remainingSeconds">--</span> 秒
+        </div>
+
+        <div class="cta">
+          <button class="btn" id="ctaBtn" aria-describedby="noteLive">
+            今すぐ申し込む
+          </button>
+          <button
+            class="btn"
+            id="snoozeBtn"
+            style="
+              background: transparent;
+              border: 1px solid rgba(255, 255, 255, 0.08);
+            "
+          >
+            あとで
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="overlay">
+      <div
+        class="panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="overlayTitle"
+      >
+        <h2 id="overlayTitle">時間切れです</h2>
+        <p>このページはもう利用できません。別のページへ移動します。</p>
+        <div
+          style="
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 12px;
+          "
+        >
+          <button class="btn" id="overlayOk">トップへ</button>
+          <button
+            class="btn"
+            id="overlayRetry"
+            style="
+              background: transparent;
+              border: 1px solid rgba(255, 255, 255, 0.08);
+            "
+          >
+            もう一度
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const durationSec = 12; // ← 秒数を変更可
+        const meterFill = document.getElementById("meterFill");
+        const tickLabel = document.getElementById("tickLabel");
+        const remText = document.getElementById("remainingSeconds");
+        const ctaBtn = document.getElementById("ctaBtn");
+        const snoozeBtn = document.getElementById("snoozeBtn");
+        const overlay = document.getElementById("overlay");
+        const overlayOk = document.getElementById("overlayOk");
+        const overlayRetry = document.getElementById("overlayRetry");
+
+        let startTime = null;
+        let rafId = null;
+        let paused = false;
+        let pauseStart = 0;
+        let totalPaused = 0;
+        let finished = false;
+
+        function start() {
+          startTime = performance.now();
+          totalPaused = 0;
+          finished = false;
+          tick();
+        }
+
+        function tick(now) {
+          if (!startTime) startTime = performance.now();
+          if (paused || finished) {
+            rafId = requestAnimationFrame(tick);
+            return;
+          }
+          const elapsed = (now - startTime - totalPaused) / 1000;
+          const pct = Math.min(1, elapsed / durationSec);
+          const width = pct * 100;
+          meterFill.style.width = width + "%";
+
+          const remaining = Math.max(0, Math.ceil(durationSec - elapsed));
+          tickLabel.textContent = remaining + "s";
+          remText.textContent = remaining;
+
+          // ★ 色変化（緑 → 黄 → 赤）
+          const hue = Math.max(0, 120 - 120 * pct); // 120=緑, 60=黄, 0=赤
+          meterFill.style.backgroundColor = `hsl(${hue}, 80%, 50%)`;
+
+          // ★ 残り5秒で点滅
+          if (remaining <= 5) {
+            meterFill.classList.add("blink");
+          } else {
+            meterFill.classList.remove("blink");
+          }
+
+          if (pct >= 1 && !finished) {
+            finished = true;
+            onTimeout();
+            cancelAnimationFrame(rafId);
+            return;
+          }
+          rafId = requestAnimationFrame(tick);
+        }
+
+        function pause() {
+          if (paused) return;
+          paused = true;
+          pauseStart = performance.now();
+          meterFill.style.filter = "saturate(.9) brightness(.95)";
+        }
+        function resume() {
+          if (!paused) return;
+          paused = false;
+          totalPaused += performance.now() - pauseStart;
+          meterFill.style.filter = "";
+        }
+
+        function onTimeout() {
+          overlay.classList.add("show");
+          console.warn("タイムアウトしました。");
+        }
+
+        function stopAndConfirm() {
+          finished = true;
+          cancelAnimationFrame(rafId);
+          ctaBtn.disabled = true;
+          ctaBtn.textContent = "完了しました ✓";
+          tickLabel.textContent = "Saved";
+          remText.textContent = "0";
+          meterFill.style.width = "100%";
+          meterFill.style.boxShadow = "0 0 24px rgba(255,107,107,0.25)";
+        }
+
+        function snooze() {
+          if (finished) return;
+          totalPaused -= 5000;
+          const old = snoozeBtn.textContent;
+          snoozeBtn.textContent = "あと＋5秒";
+          setTimeout(() => (snoozeBtn.textContent = old), 1200);
+        }
+
+        const meter = document.getElementById("timerMeter");
+        meter.addEventListener("mouseenter", pause);
+        meter.addEventListener("mouseleave", resume);
+        meter.addEventListener("touchstart", function (e) {
+          e.preventDefault();
+          paused ? resume() : pause();
+        });
+
+        ctaBtn.addEventListener("click", stopAndConfirm);
+        snoozeBtn.addEventListener("click", snooze);
+
+        overlayOk.addEventListener("click", function () {
+          overlay.classList.remove("show");
+        });
+        overlayRetry.addEventListener("click", function () {
+          overlay.classList.remove("show");
+          meterFill.style.width = "0%";
+          ctaBtn.disabled = false;
+          ctaBtn.textContent = "今すぐ申し込む";
+          startTime = null;
+          totalPaused = 0;
+          paused = false;
+          finished = false;
+          start();
+        });
+
+        meter.addEventListener("keydown", function (e) {
+          if (e.code === "Space" || e.key === " ") {
+            e.preventDefault();
+            paused ? resume() : pause();
+          }
+        });
+
+        start();
+      })();
+    </script>
+  </body>
+</html>
