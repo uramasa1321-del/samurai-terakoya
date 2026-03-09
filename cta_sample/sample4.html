@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="reset.css" />
+    <style>
+      .blink {
+        display: inline-block; /* ボタンっぽく */
+        padding: 10px 20px;
+        font-size: 16px;
+        border: 2px solid #8e44ad;
+        background-color: #9b59b6;
+        cursor: pointer; /* クリック可能感 */
+        border-radius: 5px;
+        text-align: center; /* 中央揃え */
+        user-select: none; /* 選択されないように */
+        animation: blinkEffect 0.5s infinite alternate; /* 点滅アニメーション */
+      }
+      .blink a{
+        color: #fff;
+      }
+      @keyframes blinkEffect {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p class="blink"><a href="index.html">クリック</a></p>
+  </body>
+</html>

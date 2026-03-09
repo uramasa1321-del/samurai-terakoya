@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="reset.css" />
+    <style>
+      .pulse {
+        display: inline-block; /* ボタンのように幅・高さを持たせる */
+        padding: 10px 20px;
+        font-size: 16px;
+        border: 2px solid #9b59b6;
+        background-color: #8e44ad;
+        color: white;
+        cursor: pointer; /* クリック可能っぽく */
+        border-radius: 5px;
+        text-align: center; /* 文字中央揃え */
+        user-select: none; /* 選択されないように */
+        animation: pulseEffect 1s ease-in-out infinite;
+      }
+      .pulse a {
+        color: #fff;
+      }
+      @keyframes pulseEffect {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p class="pulse"><a href="index.html">クリック</a></p>
+  </body>
+</html>

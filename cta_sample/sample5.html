@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="reset.css" />
+    <style>
+      .glow-expand {
+        display: inline-block; /* ボタンっぽく */
+        padding: 10px 20px;
+        font-size: 16px;
+        border: 2px solid #e74c3c;
+        background-color: #c0392b;
+        cursor: pointer; /* クリック可能感 */
+        border-radius: 5px;
+        text-align: center; /* 文字中央揃え */
+        user-select: none; /* 選択されないように */
+        animation: glowExpand 2s ease-out infinite;
+      }
+      .glow-expand a{
+        color: #fff;
+      }
+
+      @keyframes glowExpand {
+        0% {
+          box-shadow: 0 0 5px #c0392b;
+        }
+        100% {
+          box-shadow: 0 0 20px 15px #e74c3c;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p class="glow-expand"><a href="index.html">クリック</a></p>
+  </body>
+</html>

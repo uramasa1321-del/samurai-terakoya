@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="reset.css" />
+    <style>
+      .button-41 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 250px;
+        margin: 0 auto;
+        padding: 0.9em 2em;
+        border: none;
+        border-radius: 5px;
+        background-color: #2589d0;
+        color: #fff;
+        font-weight: 600;
+        font-size: 1em;
+      }
+
+      .button-41:hover {
+        animation: anima-button-41 2s linear infinite;
+      }
+
+      @keyframes anima-button-41 {
+        7% {
+          transform: translateY(-15px);
+        }
+        15% {
+          transform: translateY(0);
+        }
+        20% {
+          transform: translateY(-7px);
+        }
+        25% {
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="button-41">ボタンデザイン</button>
+  </body>
+</html>

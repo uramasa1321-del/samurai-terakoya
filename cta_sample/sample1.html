@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="reset.css" />
+    <style>
+    
+      .move-left-right {
+        display: inline-block; /* ボタンのように */
+        padding: 10px 20px;
+        font-size: 16px;
+        border: 2px solid #e74c3c;
+        background-color: #c0392b;
+        cursor: pointer;
+        border-radius: 5px;
+        text-align: center; /* 中央揃え */
+        user-select: none; /* 選択されないように */
+        animation: moveLeftRight 1.5s ease-in-out infinite;
+      }
+      .move-left-right a {
+        color: #fff;
+      }
+      @keyframes moveLeftRight {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        50% {
+          transform: translateX(15px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p class="move-left-right"><a href="index.html">クリック</a></p>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="reset.css" />
+    <style>
+      .animated-btn {
+        animation: shakeAnimation 1.3s ease-out infinite;
+        animation-delay: 1s; /* 1秒後にアニメーションを開始 */
+        display: inline-block; /* ボタンっぽく */
+        padding: 10px 20px;
+        font-size: 16px;
+        border: 2px solid #5be530;
+        background-color: #28c939;
+        cursor: pointer; /* クリック可能感 */
+        border-radius: 5px;
+        text-align: center; /* 文字中央揃え */
+        user-select: none; /* 選択されないように */
+      }
+      .animated-btn a{
+        color: #fff;
+      }
+      @keyframes shakeAnimation {
+        0% {
+          transform: translateX(0);
+        }
+        50% {
+          transform: translateX(3px);
+        }
+        60% {
+          transform: translateX(-3px);
+        }
+        70% {
+          transform: translateX(3px);
+        }
+        80% {
+          transform: translateX(-3px);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p class="animated-btn"><a href="index.html">クリック</a></p>
+  </body>
+</html>

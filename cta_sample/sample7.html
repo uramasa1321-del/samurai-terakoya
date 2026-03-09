@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="reset.css" />
+    <style>
+      /* アニメーション対象の要素 */
+      .animated-btn {
+        display: inline-block; /* ボタンのように幅・高さを持たせる */
+        padding: 10px 20px;
+        font-size: 16px;
+        border: 2px solid #9b59b6;
+        background-color: #8e44ad;
+        cursor: pointer; /* クリック可能っぽく */
+        border-radius: 5px;
+        text-align: center; /* 文字中央揃え */
+        user-select: none; /* 選択されないように */
+        animation: floatAnimation 2s infinite ease-in-out; /* 2秒周期でふわふわ移動 */
+      }
+      .animated-btn a{
+        color: #fff;
+      }
+      /* アニメーションの設定：上下にふわふわと浮遊する動き */
+      @keyframes floatAnimation {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px); /* 中間点：上10px移動 */
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p class="animated-btn"><a href="index.html">クリック</a></p>
+  </body>
+</html>

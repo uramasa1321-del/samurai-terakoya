@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="reset.css" />
+    <style>
+      .btn_box {
+        width: 100%;
+        margin: 0;
+      }
+
+      .btn_spin {
+        color: #fff;
+        font-size: 16px;
+        text-align: center;
+        line-height: 70px;
+        letter-spacing: 3px;
+        width: 200px;
+        height: 70px;
+        background: #000;
+        margin: auto;
+        cursor: pointer;
+        border-radius: 100px;
+        display: inline-block;
+      }
+      .btn_spin a {
+        color: #fff;
+      }
+      .spin {
+        animation: kurukuru 4s infinite;
+        scale: 1;
+      }
+
+      @keyframes kurukuru {
+        0% {
+          transform: rotateX(0deg);
+        }
+        35% {
+          transform: rotateX(360deg);
+        }
+        100% {
+          transform: rotateX(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="btn_box">
+      <p class="btn_spin spin"><a href="index.html">クリック</a></p>
+    </div>
+  </body>
+</html>
