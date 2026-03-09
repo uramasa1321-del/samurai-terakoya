@@ -1,0 +1,17 @@
+@charset "utf-8";
+.parent{
+    height: 2000px;
+    background-color: lightcyan;
+}
+.child{
+    width: 100px;
+    height: 100px;
+    background-color: orange;
+    position: fixed;
+    bottom: 0;
+    left: 100px;
+}
+.background{
+    height: 2000px;
+    background-color: honeydew;
+}

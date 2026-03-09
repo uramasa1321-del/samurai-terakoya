@@ -1,0 +1,27 @@
+@charset "utf-8";
+p {
+    background-color: yellow;
+  }
+  #first-span {
+    background-color: lightblue;
+    /* width: 500px;
+    height: 500px; */
+    /* margin: 20px; */
+    /* padding: 20px; */
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  #second-span {
+    /* margin: 30px; */
+    background-color: lightgreen;
+    /* padding: 30px; */
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  #third-span {
+    background-color: lightgray;
+    /* margin: 40px; */
+    /* padding: 40px; */
+    padding-left: 40px;
+    padding-right: 40px;
+  }

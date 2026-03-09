@@ -1,0 +1,19 @@
+@charset "utf-8";
+#first-div {
+    width: 100px;
+    height: 100px;
+    background-color: orange;
+ }
+ #second-div {
+    width: 100px;
+    height: 100px;
+    background-color: yellow;
+ }
+ #third-div {
+    width: 100px;
+    height: 100px;
+    background-color: pink;
+    position: relative;
+    top: 50px;
+    left: 50px;
+ }
